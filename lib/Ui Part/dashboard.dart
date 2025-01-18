@@ -94,7 +94,7 @@ class Dashboard extends StatelessWidget {
                     child: Stack(
                       children: [
                         Container(   /// here we design container box and texts inside the box.
-                        width: double.infinity-100,
+                        width: MediaQuery.of(context).size.width*0.9,
                         height: 175,
                         decoration: BoxDecoration(
                           color: Color(0xff6572d0),
@@ -133,13 +133,14 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              // Align(
-                              //   alignment: Alignment.center,
-                              //     child: Image.asset('Assets/icons/iconsUpDown.png',width: 250,height: 300,))
+
                             ],
                           ),
                         ),
                       ),
+                        // Align(
+                        //     alignment: Alignment.topRight,
+                        //     child: Image.asset('Assets/icons/iconsUpDown.png',width: 400,height: 400,))
                       ],
                     ),
                   ),
