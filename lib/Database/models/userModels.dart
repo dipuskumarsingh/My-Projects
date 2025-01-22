@@ -8,11 +8,11 @@ class userModels{
   int? userId;
   String userName;
   String userEmail;
-  String userMobileNumber;
+  String? userMobileNumber;
   String userPassword;
   String userCreatedDate;
 
-  userModels({this.userId, required this.userName, required this.userEmail, required this.userMobileNumber, required this.userPassword, required this.userCreatedDate});
+  userModels({this.userId, required this.userName, required this.userEmail, this.userMobileNumber, required this.userPassword, required this.userCreatedDate});
 
   ///fromMap (form DB)
   factory userModels.fromMap(Map<String, dynamic> map) => userModels(

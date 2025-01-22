@@ -2,14 +2,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
 import 'register.dart';
 import 'dashboard.dart';
 
 /// login page design
 ///
 class loginpage extends StatelessWidget{
-  TextEditingController emailId = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController _emailId = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  DbHelper DB = DbHelper.getInstance();
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +44,7 @@ class loginpage extends StatelessWidget{
                       borderRadius: BorderRadius.circular(5)
                     ),
                     child: TextField(
-                      controller: emailId,style: TextStyle(fontSize: 20),
+                      controller: _emailId,style: TextStyle(fontSize: 20),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'abcde123@gmail.com',
@@ -64,7 +66,7 @@ class loginpage extends StatelessWidget{
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: TextField(
-                      controller: password,style: TextStyle(fontSize: 20),
+                      controller: _password,style: TextStyle(fontSize: 20),
                       obscureText: true,
                       obscuringCharacter: '*',
                       
@@ -93,9 +95,14 @@ class loginpage extends StatelessWidget{
               Container(
                 width: 330,
                 height: 60,
-                child: ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
-                  print('here we do login button action #');
+                child: ElevatedButton(onPressed: ()async{
+                 bool check = await  DB.authenticateUser(emil: _emailId.text, password: _password.text);
+                 if(check){
+                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
+                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login successfully')));
+                 }else{
+                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Id or Password worng, Please try agin!')));
+                 }
                 }, child: Text('LOGIN',style: TextStyle(fontSize: 22,fontFamily: 'subfonts'),)),
               ),
               SizedBox(height: 10,),

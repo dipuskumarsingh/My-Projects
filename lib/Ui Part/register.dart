@@ -1,12 +1,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
+import 'package:monety_ui/Database/models/userModels.dart';
+import '';
 /// Register  page design
 class RegisterPage extends StatelessWidget{
-  TextEditingController emailId = TextEditingController();
-  TextEditingController userName = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController ConfirmPassword = TextEditingController();
+  TextEditingController _emailId = TextEditingController();
+  TextEditingController _userName = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  TextEditingController _ConfirmPassword = TextEditingController();
+  DbHelper dbHelper = DbHelper.getInstance();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +43,7 @@ class RegisterPage extends StatelessWidget{
                         borderRadius: BorderRadius.circular(5)
                     ),
                     child: TextField(
-                      controller: userName,style: TextStyle(fontSize: 20),
+                      controller: _userName,style: TextStyle(fontSize: 20),
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                           hintText: 'User name',
@@ -61,7 +65,7 @@ class RegisterPage extends StatelessWidget{
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: TextField(
-                      controller: emailId,style: TextStyle(fontSize: 20),
+                      controller: _emailId,style: TextStyle(fontSize: 20),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           hintText: 'abcde123@gmail.com',
@@ -83,7 +87,7 @@ class RegisterPage extends StatelessWidget{
                     borderRadius: BorderRadius.circular(5)
                 ),
                 child: TextField(
-                  controller: password,style: TextStyle(fontSize: 20),
+                  controller: _password,style: TextStyle(fontSize: 20),
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                   obscuringCharacter: '*',
@@ -108,7 +112,7 @@ class RegisterPage extends StatelessWidget{
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TextField(
-                  controller: ConfirmPassword,style: TextStyle(fontSize: 20),
+                  controller: _ConfirmPassword,style: TextStyle(fontSize: 20),
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
                   obscuringCharacter: '*',
@@ -130,7 +134,20 @@ class RegisterPage extends StatelessWidget{
               Container(
                 width: 330,
                 height: 60,
-                child: ElevatedButton(onPressed: (){
+                child: ElevatedButton(onPressed: () async {
+                  /// register operation
+                   if(!await dbHelper.isUserAlreadyRegister(email:_emailId.text )){
+                     userModels newUser = userModels(userName: _userName.text, userEmail: _emailId.text, userPassword: _password.text, userCreatedDate: DateTime.now().millisecondsSinceEpoch.toString());
+                   bool check = await dbHelper.registerUser(user: newUser );
+                   if(check){
+                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Successfully register, Login now !')));
+                     Navigator.pop(context);
+                   }else{
+                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Successfully not  register, some things worng please try again !')));
+                   }
+                   }else{
+                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User all ready register!!')));  /// this show the massage when user register.
+                   }
                   print('here we do login button action #');
                 }, child: Text('REGISTER',style: TextStyle(fontSize: 22,fontFamily: 'subfonts'),)),
               ),

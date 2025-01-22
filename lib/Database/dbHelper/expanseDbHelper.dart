@@ -3,11 +3,16 @@
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DbHelper{
+import '../models/userModels.dart';
 
-  /// golable
+class DbHelper{
+  //global variable
+  DbHelper._();
+  static DbHelper getInstance()=>DbHelper._();
+  /// global variable
   /// table no 1 for user
   static const TABLE_NAME = 'user';
   static const COLUMN_USER_ID = 'user_Id';
@@ -62,6 +67,52 @@ class DbHelper{
   }
 
   /// Queries
+  ///
+  /// this queries for register user
+  Future<bool> registerUser({required userModels user})async{
+    var db = await getDb();
+    // if(! await isUserAlreadyRegister(email: user.userEmail)){
+     int rowsEffected = await db.insert(TABLE_NAME, user.toMap());
+      return rowsEffected > 0;
+    // }else{
+      return false;
+    // }
+  }
 
+  /// this queries for register user check already register or not
+  Future<bool> isUserAlreadyRegister({required String email})async{
+    var db = await getDb();
+    List<Map<String,dynamic>> mData = await db.query(TABLE_NAME,where: "$COLUMN_USER_EMAIL_ID = ? " ,whereArgs:[email] ); //// USER_MOBILE_NUMBER is used for check the what mobile number already register or not.
+    return mData.isNotEmpty;
+    // if(mData.isNotEmpty){
+    //   return true;
+    // }else{
+    //   return false;
+    // }
+  }
+  /// this for the check mobile number and email
+// Future<bool> isUserAlreadyRegister({required String email, required String mobileNumber})async{
+//     var db = await getDb();
+//     List<Map<String,dynamic>> mData = await db.query(TABLE_NAME,where: "$COLUMN_USER_EMAIL_ID = ? OR $COLUMN_USER_MOBILE_NUMBER = ? ) ", whereArgs:[email,mobileNumber] ); //// USER_MOBILE_NUMBER is used for check the what mobile number already register or not.
+//     return mData.isNotEmpty;
+//     // if(mData.isNotEmpty){
+//     //   return true;
+//     // }else{
+//     //   return false;
+//     // }
+// }
 
+  /// this Queries is used for authenticate User  
+ Future<bool> authenticateUser({required String emil, required String password})async{
+    var db = await getDb();
+    List<Map<String, dynamic>> mData = await db.query(TABLE_NAME,where: "$COLUMN_USER_EMAIL_ID = ? , AND $COLUMN_USER_PASSWORD = ?  ", whereArgs: [emil, password]);
+
+    /// to manage session store UID in  shared_preferences
+    if(mData.isNotEmpty){
+      print("${mData[0][COLUMN_USER_ID]}");
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setInt("UID", mData[0][COLUMN_USER_ID]);
+    }
+      return mData.isNotEmpty;
+ }
 }
