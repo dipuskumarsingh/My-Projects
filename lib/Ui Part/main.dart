@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dashboard.dart';
 import 'introScreen.dart';
+import 'loginPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +31,16 @@ class _SplaceScreenState extends State<SplaceScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 2),(){
+    Timer(Duration(seconds: 2),()async{
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>introScreen()));
+      var prefs = await SharedPreferences.getInstance();    /// here we maintain the session [if] user log in the app dricatily got to the Dashboard screen [else] he go to the login screen
+     int uid = prefs.getInt("UID") ?? 0;
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>introScreen()));
+     Widget navigateTo = loginpage();
+     if(uid > 0){
+       navigateTo = Dashboard();
+     }
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>navigateTo,));
     });
   }
   @override

@@ -105,7 +105,7 @@ class DbHelper{
   /// this Queries is used for authenticate User  
  Future<bool> authenticateUser({required String emil, required String password})async{
     var db = await getDb();
-    List<Map<String, dynamic>> mData = await db.query(TABLE_NAME,where: "$COLUMN_USER_EMAIL_ID = ? , AND $COLUMN_USER_PASSWORD = ?  ", whereArgs: [emil, password]);
+    List<Map<String, dynamic>> mData = await db.query(TABLE_NAME,where: "$COLUMN_USER_EMAIL_ID = ? AND $COLUMN_USER_PASSWORD = ?  ", whereArgs: [emil, password]);
 
     /// to manage session store UID in  shared_preferences
     if(mData.isNotEmpty){
