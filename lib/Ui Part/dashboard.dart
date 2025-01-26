@@ -14,6 +14,9 @@ class Dashboard extends StatelessWidget {
        {'icons':Icons.book_outlined, 'color':Colors.orange[100], 'work':'Books','workDetails':'Buy new books', 'price': '-\$60'},
     ];
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddeExpansePage()));
+      }, child:Icon(Icons.add) ,),
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(top: 22),
@@ -96,7 +99,7 @@ class Dashboard extends StatelessWidget {
                       child: Stack(
                         children: [
                           Container(   /// here we design container box and texts inside the box.
-                          width: MediaQuery.of(context).size.width*0.9,
+                          width: 360,
                           height: 175,
                           decoration: BoxDecoration(
                             color: Color(0xff6572d0),
@@ -104,45 +107,40 @@ class Dashboard extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20),
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                SizedBox(height: 5),
+                                Text('Expense total', style: TextStyle(fontSize: 25, color: Colors.white),),
+                                Text('\$3,734', style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,color: Colors.white),),
+                                Row(
                                   children: [
-                                    SizedBox(height: 5),
-                                    Text('Expense total', style: TextStyle(fontSize: 25, color: Colors.white),),
-                                    Text('\$3,734', style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,color: Colors.white),),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 80,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.red[400],
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            '+\$240',
-                                            style: TextStyle(
-                                                fontSize: 22, color: Colors.white),
-                                          )),
-                                        ),
-                                        SizedBox(width: 4,),
-                                        Text('than last month', style: TextStyle(fontSize: 20, color: Colors.white),)
-                                      ],
+                                    Container(
+                                      width: 80,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red[400],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        '+\$240',
+                                        style: TextStyle(
+                                            fontSize: 22, color: Colors.white),
+                                      )),
                                     ),
+                                    SizedBox(width: 4,),
+                                    Text('than last month', style: TextStyle(fontSize: 20, color: Colors.white),)
                                   ],
                                 ),
-                
                               ],
                             ),
                           ),
                         ),
-                          // Align(
-                          //     alignment: Alignment.topRight,
-                          //     child: Image.asset('Assets/icons/iconsUpDown.png',width: 400,height: 400,))
+                                 Align(
+                                alignment: Alignment(1.35,0),
+                                child: Image.asset('Assets/icons/pieChart.png',width: 180,height: 180,))
                         ],
                       ),
                     ),
@@ -269,12 +267,6 @@ class Dashboard extends StatelessWidget {
                                           ),
                                           SizedBox(width: 30),
                                           Text(Monday[index]['price'],style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700,color: Colors.red[400]),),
-                                          Align(
-                                              child: FloatingActionButton(onPressed: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>AddeExpansePage()));
-                                              },child: Icon(Icons.add),),
-                                            alignment: Alignment.centerRight
-                                          ),
                                         ],
                                       );
                                     }),

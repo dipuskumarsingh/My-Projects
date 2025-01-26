@@ -15,8 +15,8 @@ class expanseDataModel{
   String expanseDescription;
   double expanseAmount;
   double expanseBalance;
-  int expanseType;
-  int expanseCategoryId;
+  String expanseType;
+  String expanseCategoryId;
   String expanseTime;
 
   expanseDataModel({this.expanseId,

@@ -1,6 +1,7 @@
 
 
 
+import 'package:monety_ui/Database/models/expanseModels.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,4 +116,14 @@ class DbHelper{
     }
       return mData.isNotEmpty;
  }
+
+ /// to add expanse in the dashboard,
+
+Future<bool> addExpanse({required expanseDataModel Ex})async{
+    var db = await getDb();
+  int  rowsEffected = await db.insert(TABLE_EXPANSE_NAME, Ex.toMap());
+  return rowsEffected > 0;
+}
+
+
 }
