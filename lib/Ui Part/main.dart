@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
+import 'package:monety_ui/Ui%20Part/bloc/Expanse_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'dashboard.dart';
 import 'introScreen.dart';
 import 'loginPage.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(BlocProvider(create: (context)=>ExpanseBloc(dbHelp: DbHelper.getInstance()),child: MyApp(),)) ;
 }
 
 class MyApp extends StatelessWidget {

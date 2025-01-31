@@ -2,12 +2,15 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
 import 'package:monety_ui/Database/models/expanseModels.dart';
 import 'package:monety_ui/Domain/appConstant.dart';
+import 'package:monety_ui/Ui%20Part/bloc/Expanse_events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Domain/uiHelper.dart';
+import 'bloc/Expanse_bloc.dart';
 
 class AddeExpansePage extends StatefulWidget{
   @override
@@ -15,6 +18,7 @@ class AddeExpansePage extends StatefulWidget{
 }
 
 class _AddeExpansePageState extends State<AddeExpansePage> {
+  DbHelper db = DbHelper.getInstance();
   TextEditingController _title = TextEditingController();
 
   TextEditingController _description = TextEditingController();
@@ -54,17 +58,20 @@ class _AddeExpansePageState extends State<AddeExpansePage> {
                   onTap: () async {
                     var prefs = await SharedPreferences.getInstance();    /// here we maintain the session [if] user log in the app dricatily got to the Dashboard screen [else] he go to the login screen
                     int uid = prefs.getInt("UID") ?? 0;
-                    Db.addExpanse(Ex: expanseDataModel(   /// here adding the value in expanse area
+                    // Db.addExpanse(Ex: expanseDataModel(   /// here adding the value in expanse area
                       /// this work implement same with the BLOCK Sate.
-                        expanseUserId: uid,
-                        expanseTitle: _title.text,
-                        expanseDescription: _description.text,
-                        expanseAmount: double.parse(_addAmount.text),
-                        expanseBalance:0,
-                        expanseType: selectedType,
-                        expanseCategoryId: appConstant.mCategory[selectedIndex].categoryId.toString(),  /// here some doute.
-                        expanseTime: (selectedDateTime ?? DateTime.now()).millisecondsSinceEpoch.toString(),
-                    ));
+                   context.read<ExpanseBloc>().add(addExpanseEventBloc(newExpanseDataModel:
+                       expanseDataModel(
+                         expanseUserId: uid,
+                         expanseTitle:  _title.text,
+                         expanseDescription: _description.text,
+                         expanseAmount: double.parse( _addAmount.text),
+                         expanseBalance: 0,
+                         expanseType: selectedType,
+                         expanseCategoryId: appConstant.mCategory[selectedIndex].categoryId.toString(),
+                         expanseTime:  DateTime.now().toString(),
+                         //expanseTime: selectedDateTime ?? DateTime.now().millisecondsSinceEpoch.toString(),
+                       )));
                     Navigator.pop(context);
                   },
                     child: Icon(Icons.check_sharp,color: Colors.green,size: 40,)),

@@ -3,23 +3,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dashboard.dart';
 import 'loginPage.dart';
-void main(){
-  runApp(myApp());
-}
-
-class myApp extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'intro Screen',
-      home: introScreen(),
-    );
-  }
-}
-
 class introScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -68,8 +53,7 @@ class introScreen extends StatelessWidget{
                             SizedBox(width: 245,),
                             InkWell(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>loginpage()));
-                                print('its is clickeable');
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Dashboard()));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(top: 7),

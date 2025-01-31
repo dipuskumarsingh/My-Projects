@@ -126,4 +126,17 @@ Future<bool> addExpanse({required expanseDataModel Ex})async{
 }
 
 
+/// to get data of expanse in the dashboard
+
+ Future<List<expanseDataModel>>fecthExpanseData()async{
+    var db = await getDb();
+  List<Map<String, dynamic>> mData = await  db.query(TABLE_EXPANSE_NAME);
+  List<expanseDataModel> mExpanse = [];
+  for(Map<String, dynamic> eachExpanse in mData){
+   mExpanse.add(expanseDataModel.fromMap(eachExpanse));
+  }
+  return mExpanse;
+ }
+
+
 }

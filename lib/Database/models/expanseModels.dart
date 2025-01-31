@@ -27,7 +27,7 @@ class expanseDataModel{
     required this.expanseBalance,
     required this.expanseType,
     required this.expanseCategoryId,
-    required this.expanseTime
+     required this.expanseTime
   });
 
   /// from Map (from DB)
