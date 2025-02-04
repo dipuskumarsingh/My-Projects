@@ -10,10 +10,9 @@ class addExpanseEventBloc extends ExpanseEventBloc{
   expanseDataModel newExpanseDataModel;
   addExpanseEventBloc({required this.newExpanseDataModel});
 }
-class fetchInitialExpanseBloc extends ExpanseEventBloc{
-  expanseDataModel fetchInitialExpanseDataModel;
-  fetchInitialExpanseBloc({required this.fetchInitialExpanseDataModel});
-}
+class fetchInitialExpanseBloc extends ExpanseEventBloc{}
+
+
 class updateExpanseBloc extends ExpanseEventBloc{
   expanseDataModel updateExpanseDataModel;
   int id;

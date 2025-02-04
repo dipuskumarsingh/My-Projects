@@ -33,7 +33,7 @@ class DbHelper{
   static const COLUMN_EXPANSE_BALANCE = 'ex_balance';
   static const COLUMN_EXPANSE_TYPE = 'ex_type';
   static const COLUMN_EXPANSE_CATEGORY_ID = 'ex_category_Id';
-  static const COLUMN_EXPANSE_TIME = 'ex_date_time';
+  static const COLUMN_EXPANSE_TIME = 'Created_at';
 
   /// table no 3 for CATEGORY data
   static const TABLE_CATEGORY_NAME = 'category';

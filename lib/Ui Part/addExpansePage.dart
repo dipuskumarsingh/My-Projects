@@ -12,12 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Domain/uiHelper.dart';
 import 'bloc/Expanse_bloc.dart';
 
-class AddeExpansePage extends StatefulWidget{
+class AddExpansePage extends StatefulWidget{
   @override
-  State<AddeExpansePage> createState() => _AddeExpansePageState();
+  State<AddExpansePage> createState() => _AddExpansePageState();
 }
 
-class _AddeExpansePageState extends State<AddeExpansePage> {
+class _AddExpansePageState extends State<AddExpansePage> {
   DbHelper db = DbHelper.getInstance();
   TextEditingController _title = TextEditingController();
 
@@ -68,10 +68,8 @@ class _AddeExpansePageState extends State<AddeExpansePage> {
                          expanseAmount: double.parse( _addAmount.text),
                          expanseBalance: 0,
                          expanseType: selectedType,
-                         expanseCategoryId: appConstant.mCategory[selectedIndex].categoryId.toString(),
-                         expanseTime:  DateTime.now().toString(),
-                         //expanseTime: selectedDateTime ?? DateTime.now().millisecondsSinceEpoch.toString(),
-                       )));
+                         expanseCategoryId: appConstant.mCategory[selectedIndex].categoryId!,
+                         created_at: (selectedDateTime ?? DateTime.now()).millisecondsSinceEpoch.toString())));
                     Navigator.pop(context);
                   },
                     child: Icon(Icons.check_sharp,color: Colors.green,size: 40,)),

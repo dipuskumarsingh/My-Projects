@@ -16,8 +16,8 @@ class expanseDataModel{
   double expanseAmount;
   double expanseBalance;
   String expanseType;
-  String expanseCategoryId;
-  String expanseTime;
+  int expanseCategoryId;
+  String created_at;
 
   expanseDataModel({this.expanseId,
     required this.expanseUserId,
@@ -27,8 +27,7 @@ class expanseDataModel{
     required this.expanseBalance,
     required this.expanseType,
     required this.expanseCategoryId,
-     required this.expanseTime
-  });
+    required this.created_at,});
 
   /// from Map (from DB)
 
@@ -41,7 +40,7 @@ class expanseDataModel{
     expanseBalance: map[DbHelper.COLUMN_EXPANSE_BALANCE],
     expanseType: map[DbHelper.COLUMN_EXPANSE_TYPE],
     expanseCategoryId: map[DbHelper.COLUMN_EXPANSE_CATEGORY_ID],
-    expanseTime: map[DbHelper.COLUMN_EXPANSE_TIME],
+    created_at: map[DbHelper.COLUMN_EXPANSE_TIME],
   );
 
   /// to map  (to DB)
@@ -54,7 +53,7 @@ class expanseDataModel{
     DbHelper.COLUMN_EXPANSE_BALANCE : expanseBalance,
     DbHelper.COLUMN_EXPANSE_TYPE : expanseType,
     DbHelper.COLUMN_EXPANSE_CATEGORY_ID : expanseCategoryId,
-    DbHelper.COLUMN_EXPANSE_TIME : expanseTitle,
+    DbHelper.COLUMN_EXPANSE_TIME : created_at,
   };
 }
 

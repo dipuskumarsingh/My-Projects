@@ -1,12 +1,16 @@
+
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
  import 'package:monety_ui/Database/models/expanseModels.dart';
 import 'package:monety_ui/Ui%20Part/addExpansePage.dart';
-import 'package:monety_ui/Ui%20Part/bloc/Expanse_events.dart';
 import 'package:monety_ui/Ui%20Part/bloc/Expanse_state.dart';
 import 'package:monety_ui/Ui%20Part/statistic.dart';
-
 import 'bloc/Expanse_bloc.dart';
+import 'bloc/Expanse_events.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -14,29 +18,21 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  DateFormat Df = DateFormat.yMMMd();
+  DbHelper dbHelper = DbHelper.getInstance();
   List<expanseDataModel> mExpanse = [];
   @override
  @override
   void initState() {
   
     super.initState();
-
+    context.read<ExpanseBloc>().add(fetchInitialExpanseBloc());
   }
   @override
   Widget build(BuildContext context) {
-    // List<Map<String, dynamic>> ExpenseData = [
-    //   {'icons':Icons.shopping_cart_outlined, 'color':Colors.deepPurple[100], 'work':'Shop','workDetails':'Buy new clothes', 'price': '-\$90'},
-    //   {'icons':Icons.phone_android_outlined,'color':Colors.yellow[100], 'work':'Electronic','workDetails':'Buy new Iphone', 'price': '-\$129'},
-    //   {'icons':Icons.car_rental_outlined, 'color':Colors.green[100],'work':'Electronic','workDetails':'Buy new car', 'price': '-\$13980'},
-    // ];
-    // List<Map<String, dynamic>> Monday =[
-    //    {'icons':Icons.book_outlined, 'color':Colors.orange[100], 'work':'Books','workDetails':'Buy new books', 'price': '-\$60'},
-    // ];
-
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddeExpansePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>AddExpansePage()));
       }, child:Icon(Icons.add) ,),
       appBar: AppBar(
         title: Padding(
@@ -168,40 +164,128 @@ class _DashboardState extends State<Dashboard> {
                   Text('Expense List', style: TextStyle(fontSize: 30,fontWeight: FontWeight.w700,fontFamily:'H1fonts'),),
                   SizedBox(height: 10,),
                   Expanded(
-                    child: BlocBuilder<ExpanseBloc,ExpanseSateBloc>(builder: (_,state){
-                      if(state is loadingExpanseSate){
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if(state is errorExpanseSate){
-                        return Center(child: Text(state.errorMassage));
-                      }
-                      if(state is loadedExpanseSate){
-                        return state.mExpanse.isNotEmpty ? ListView.builder(
-                            itemCount: state.mExpanse.length,
-                            itemBuilder: (_,index){
-                              // final mExpanses = mExpanse[index];
-                              return Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(state.mExpanse[index].expanseTime),
-                                      Text(state.mExpanse[index].expanseAmount.toString()),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(state.mExpanse[index].expanseTitle),
-                                      Text(state.mExpanse[index].expanseDescription),
-                                    ],
-                                  ),
-                                  Text('descripation')
-                                ],);
+                    child:
+                    BlocBuilder<ExpanseBloc, ExpanseSateBloc>(builder: (_, state) {
 
-                            }
-                        ): Container(child: Text('No Expanse found Yet!!'),);
-                      }
-                      return SizedBox();
-                    }),
+                          if (state is loadingExpanseSate) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (state is errorExpanseSate) {
+                            return Center(
+                              child: Text(state.errorMassage),
+                            );
+                          }
+
+                          if (state is loadedExpanseSate) {
+
+                            return state.mExpanse.isNotEmpty ? ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: state.mExpanse.length,
+                              itemBuilder: (context, index) {
+                                final expanse = state.mExpanse[index];
+                                return Container(
+                                    margin: const EdgeInsets.only(bottom: 15),
+                                    padding: const EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF5F5F5),
+                                      border: Border.all(
+                                          color:  Colors.grey.shade400,
+                                          width: 1
+                                      ),
+                                      borderRadius: BorderRadius.circular(7),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade200,
+                                          blurRadius: 6,
+                                          offset: Offset(0, 4),
+                                        )
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("date",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold
+                                                )),
+                                            Spacer(),
+                                            Text(
+                                              "\$${expanse.expanseBalance}",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: state.mExpanse[index].expanseBalance < 0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Divider(),
+                                        ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics: NeverScrollableScrollPhysics(),
+                                            itemCount: state.mExpanse.length,
+                                            itemBuilder: (_, childIndex){
+                                              return ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                leading: Container(
+                                                  padding: EdgeInsets.all(7),
+                                                  width: 50,
+                                                  height: 50,
+
+                                                  // child: Image.asset(appConstant.mCategory.where((eachCat) {
+                                                  //   return eachCat.categoryId==state.mExpanse[index].expanseId;
+                                                  // }).toList()[0].categoryIcons),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(11),
+                                                       // color: Colors.primaries[Random.nextInt(Colors.primaries.length-1)].shade100,
+                                                    color:  Colors.lightBlue
+                                                  ),
+
+                                                ),
+                                                title: Text(expanse.expanseTitle,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold)),
+                                                subtitle: Text(expanse.expanseDescription,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey)),
+                                                trailing: Text(
+                                                  "\$${expanse.expanseAmount}",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: expanse.expanseBalance < 0
+                                                        ? Colors.red
+                                                        : Colors.green,
+                                                  ),
+                                                ),
+                                              );
+                                            })
+                                      ],
+                                    ),
+
+                                );
+                              },
+                            )
+                                : Center(
+                              child: Text('No Expenses yet!!'),
+                            );
+                          }
+
+                          return Container();
+                        }),
                   ),
                 ],
               ),
