@@ -1,5 +1,4 @@
 
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -219,7 +218,7 @@ class _DashboardState extends State<Dashboard> {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: state.mExpanse[index].expanseBalance < 0
+                                                color: state.mExpanse[index].expanseBalance! < 0
                                                     ? Colors.red
                                                     : Colors.green,
                                               ),
@@ -266,7 +265,7 @@ class _DashboardState extends State<Dashboard> {
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
-                                                    color: expanse.expanseBalance < 0
+                                                    color: expanse.expanseBalance! < 0
                                                         ? Colors.red
                                                         : Colors.green,
                                                   ),

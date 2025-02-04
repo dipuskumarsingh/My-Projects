@@ -10,16 +10,17 @@ import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
 class expanseDataModel{
 
   int? expanseId;
-  int expanseUserId;
+  int? expanseUserId;
   String expanseTitle;
   String expanseDescription;
-  double expanseAmount;
-  double expanseBalance;
+  double? expanseAmount;
+  double? expanseBalance;
   String expanseType;
-  int expanseCategoryId;
-  String created_at;
+  int? expanseCategoryId;
+  String? created_at;
 
-  expanseDataModel({this.expanseId,
+  expanseDataModel({
+    this.expanseId,
     required this.expanseUserId,
     required this.expanseTitle,
     required this.expanseDescription,
@@ -27,7 +28,7 @@ class expanseDataModel{
     required this.expanseBalance,
     required this.expanseType,
     required this.expanseCategoryId,
-    required this.created_at,});
+    required this.created_at});
 
   /// from Map (from DB)
 

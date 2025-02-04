@@ -15,25 +15,25 @@ class DbHelper{
   static DbHelper getInstance()=>DbHelper._();
   /// global variable
   /// table no 1 for user
-  static const TABLE_NAME = 'user';
-  static const COLUMN_USER_ID = 'user_Id';
-  static const COLUMN_USER_NAME = 'user_name';
-  static const COLUMN_USER_EMAIL_ID = 'user_email';
-  static const COLUMN_USER_MOBILE_NUMBER = 'user_mobileNumber';
-  static const COLUMN_USER_PASSWORD = 'user_password';
-  static const COLUMN_USER_CREATED_DATE = 'user_created_date';
+  static final String TABLE_NAME = 'user';
+  static final String COLUMN_USER_ID = 'user_Id';
+  static final String COLUMN_USER_NAME = 'user_name';
+  static final String COLUMN_USER_EMAIL_ID = 'user_email';
+  static final String COLUMN_USER_MOBILE_NUMBER = 'user_mobileNumber';
+  static final String COLUMN_USER_PASSWORD = 'user_password';
+  static final String COLUMN_USER_CREATED_DATE = 'user_created_date';
 
 /// table no 2 for expanse data
-  static const TABLE_EXPANSE_NAME = 'ExpenseData';
-  static const COLUMN_EXPANSE_ID = 'ex_Id';
-  static const COLUMN_EXPANSE_USER_ID = 'user_Id';
-  static const COLUMN_EXPANSE_TITLE = 'ex_title';
-  static const COLUMN_EXPANSE_DESCRIPTION = 'ex_description';
-  static const COLUMN_EXPANSE_AMOUNT = 'ex_amount';
-  static const COLUMN_EXPANSE_BALANCE = 'ex_balance';
-  static const COLUMN_EXPANSE_TYPE = 'ex_type';
-  static const COLUMN_EXPANSE_CATEGORY_ID = 'ex_category_Id';
-  static const COLUMN_EXPANSE_TIME = 'Created_at';
+  static final String TABLE_EXPANSE_NAME = 'ExpenseData';
+  static final String COLUMN_EXPANSE_ID = 'ex_Id';
+  static final String COLUMN_EXPANSE_USER_ID = 'user_Id';
+  static final String COLUMN_EXPANSE_TITLE = 'ex_title';
+  static final String COLUMN_EXPANSE_DESCRIPTION = 'ex_description';
+  static final String COLUMN_EXPANSE_AMOUNT = 'ex_amount';
+  static final String COLUMN_EXPANSE_BALANCE = 'ex_balance';
+  static final String COLUMN_EXPANSE_TYPE = 'ex_type';
+  static final String COLUMN_EXPANSE_CATEGORY_ID = 'ex_category_Id';
+  static final String COLUMN_EXPANSE_TIME = 'Created_at';
 
   /// table no 3 for CATEGORY data
   static const TABLE_CATEGORY_NAME = 'category';
@@ -57,10 +57,10 @@ class DbHelper{
 
       /// now creating table
       /// this table is created for the users
-      db.execute("create table $TABLE_NAME( $COLUMN_USER_ID integer primary key autoincrement, $COLUMN_USER_NAME String, $COLUMN_USER_EMAIL_ID String, $COLUMN_USER_MOBILE_NUMBER String, $COLUMN_USER_PASSWORD String, $COLUMN_USER_CREATED_DATE String )");
+      db.execute("create table $TABLE_NAME( $COLUMN_USER_ID integer primary key autoincrement, $COLUMN_USER_NAME text not null, $COLUMN_USER_EMAIL_ID text not null, $COLUMN_USER_MOBILE_NUMBER text not null, $COLUMN_USER_PASSWORD text not null, $COLUMN_USER_CREATED_DATE text not null )");
 
       /// This table is used for the Expense data
-      db.execute("create table $TABLE_EXPANSE_NAME( $COLUMN_EXPANSE_ID integer primary key autoincrement, $COLUMN_EXPANSE_USER_ID integer, $COLUMN_EXPANSE_TITLE String, $COLUMN_EXPANSE_DESCRIPTION String, $COLUMN_EXPANSE_AMOUNT real, $COLUMN_EXPANSE_BALANCE real, $COLUMN_EXPANSE_TYPE integer, $COLUMN_EXPANSE_CATEGORY_ID integer, $COLUMN_EXPANSE_TIME String ) ");
+      db.execute("create table $TABLE_EXPANSE_NAME( $COLUMN_EXPANSE_ID integer primary key autoincrement, $COLUMN_EXPANSE_USER_ID integer not null, $COLUMN_EXPANSE_TITLE text not null, $COLUMN_EXPANSE_DESCRIPTION text not null, $COLUMN_EXPANSE_AMOUNT real not null, $COLUMN_EXPANSE_BALANCE real not null, $COLUMN_EXPANSE_TYPE text not null, $COLUMN_EXPANSE_CATEGORY_ID integer not null, $COLUMN_EXPANSE_TIME text not null ) ");
       
       /// This table is used for the category data
       db.execute("create table $TABLE_CATEGORY_NAME( $COLUMN_CATEGORY_ID integer primary key autoincrement, $COLUMN_CATEGORY_TITLE String, $COLUMN_CATEGORY_ICONS String )");
@@ -130,7 +130,7 @@ Future<bool> addExpanse({required expanseDataModel Ex})async{
 
  Future<List<expanseDataModel>>fecthExpanseData()async{
     var db = await getDb();
-  List<Map<String, dynamic>> mData = await  db.query(TABLE_EXPANSE_NAME);
+  List<Map<String, dynamic>> mData = await  db.query(TABLE_EXPANSE_NAME,);
   List<expanseDataModel> mExpanse = [];
   for(Map<String, dynamic> eachExpanse in mData){
    mExpanse.add(expanseDataModel.fromMap(eachExpanse));
