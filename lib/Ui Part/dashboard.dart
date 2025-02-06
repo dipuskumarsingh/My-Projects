@@ -1,10 +1,13 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:monety_ui/Database/dbHelper/expanseDbHelper.dart';
  import 'package:monety_ui/Database/models/expanseModels.dart';
+import 'package:monety_ui/Domain/appConstant.dart';
 import 'package:monety_ui/Ui%20Part/addExpansePage.dart';
 import 'package:monety_ui/Ui%20Part/bloc/Expanse_state.dart';
 import 'package:monety_ui/Ui%20Part/statistic.dart';
@@ -17,15 +20,16 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+  String mFilterSelectedType = 'Date wise';
   DateFormat Df = DateFormat.yMMMd();
   DbHelper dbHelper = DbHelper.getInstance();
   List<expanseDataModel> mExpanse = [];
-  @override
  @override
   void initState() {
   
     super.initState();
-    context.read<ExpanseBloc>().add(fetchInitialExpanseBloc());
+    context.read<ExpanseBloc>().add(fetchFilteredExpanseBloc(type: 0));
   }
   @override
   Widget build(BuildContext context) {
@@ -84,25 +88,65 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       SizedBox(width: 30,),
                       Container(
-                        height: 50,
-                        width: 140,
                         decoration: BoxDecoration(
-                          color: Colors.lightBlue[100],
-                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.lightBlue.shade100,
+                          borderRadius: BorderRadius.circular(7)
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('This month', style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600,fontFamily: 'H1fonts'),),
-                            InkWell(
-                              onTap: (){
-                                print('this clickable');
-                              },
-                                child: Icon(Icons.arrow_drop_down)),
-                          ],
+                        child: DropdownButton<String>(    /// this code syntax for DropdownButton.
+                          padding: EdgeInsets.all(7),
+                          style: TextStyle(fontSize: 20,color: Colors.black,),
+                          borderRadius: BorderRadius.circular(7),
+                          iconSize: 25,
+                          focusColor: Colors.lightBlue.shade100,
+                          autofocus: true,
+                          dropdownColor: Colors.lightBlue.shade100,
+                          value:mFilterSelectedType ,
+                            onChanged: (String? newValue){
+                            int SelectedType = 0;
+                            if(newValue == "Date wise"){
+                              SelectedType = 0;
+                            }else if(newValue == 'Month wise'){
+                              SelectedType = 1;
+                            }else{
+                              SelectedType = 2;
+                            }
+                            context.read<ExpanseBloc>().add(fetchFilteredExpanseBloc(type: SelectedType));
+                            setState(() {
+                              mFilterSelectedType = newValue!;
+                            });
+                            },
+                            items: <String>['Date wise', 'Month wise', 'Year wise'].map<DropdownMenuItem<String>>((String value){
+                              return DropdownMenuItem<String>(value: value, child:Text(value),
+                              );
+                            }).toList(),
                         ),
-                      )
+                      ),
+                      // DropdownMenu(
+                      //   textStyle: TextStyle(fontSize: 18,letterSpacing: 2,fontWeight: FontWeight.bold,),
+                      //   inputDecorationTheme: InputDecorationTheme(
+                      //     fillColor: Colors.lightBlue.shade100,
+                      //     filled: true,
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(7),
+                      //       borderSide: BorderSide.none
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(7),
+                      //       borderSide: BorderSide.none
+                      //     ),
+                      //   ),
+                      //   width: 140,
+                      //     initialSelection:mFilterSelectedType,
+                      //     onSelected: (value){
+                      //       mFilterSelectedType = value!;
+                      //     },
+                      //     dropdownMenuEntries: mFilterType.map((value){
+                      //       return DropdownMenuEntry(
+                      //         style: ButtonStyle(
+                      //           textStyle: WidgetStatePropertyAll(TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                      //         ),
+                      //           value: value, label: value);
+                      //     }).toList())
                     ],
                   ),
                   SizedBox(height: 20,),
@@ -128,7 +172,7 @@ class _DashboardState extends State<Dashboard> {
                             children: [
                               SizedBox(height: 5),
                               Text('Expense total', style: TextStyle(fontSize: 25, color: Colors.white),),
-                              Text('\$3,734', style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,color: Colors.white),),
+                              Text('\$3,734', style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold,color: Colors.white),),
                               Row(
                                 children: [
                                   Container(
@@ -154,7 +198,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                                Align(
-                              alignment: Alignment(1.35,0),
+                              alignment: Alignment(1.275,0),
                               child: Image.asset('Assets/icons/pieChart.png',width: 180,height: 180,))
                       ],
                     ),
@@ -177,13 +221,13 @@ class _DashboardState extends State<Dashboard> {
                             );
                           }
 
-                          if (state is loadedExpanseSate) {
+                          if (state is filterLoadedExpanseSate) {
 
-                            return state.mExpanse.isNotEmpty ? ListView.builder(
+                            return state.mFilterExpanse.isNotEmpty ? ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: state.mExpanse.length,
+                              itemCount: state.mFilterExpanse.length,
                               itemBuilder: (context, index) {
-                                final expanse = state.mExpanse[index];
+                                final expanse = state.mFilterExpanse[index];
                                 return Container(
                                     margin: const EdgeInsets.only(bottom: 15),
                                     padding: const EdgeInsets.all(15),
@@ -207,18 +251,18 @@ class _DashboardState extends State<Dashboard> {
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text("date",
+                                            Text(expanse.type,
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold
                                                 )),
                                             Spacer(),
                                             Text(
-                                              "\$${expanse.expanseBalance}",
+                                              "\$${expanse.Balance}",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: state.mExpanse[index].expanseBalance! < 0
+                                                color: expanse.Balance < 0
                                                     ? Colors.red
                                                     : Colors.green,
                                               ),
@@ -233,39 +277,37 @@ class _DashboardState extends State<Dashboard> {
                                             padding: EdgeInsets.zero,
                                             shrinkWrap: true,
                                             physics: NeverScrollableScrollPhysics(),
-                                            itemCount: state.mExpanse.length,
+                                            itemCount: state.mFilterExpanse[index].allExpanses.length,
                                             itemBuilder: (_, childIndex){
                                               return ListTile(
                                                 contentPadding: EdgeInsets.zero,
                                                 leading: Container(
-                                                  padding: EdgeInsets.all(7),
+                                                  padding: EdgeInsets.all(5),
                                                   width: 50,
                                                   height: 50,
-
-                                                  // child: Image.asset(appConstant.mCategory.where((eachCat) {
-                                                  //   return eachCat.categoryId==state.mExpanse[index].expanseId;
-                                                  // }).toList()[0].categoryIcons),
+                                                  child: Image.asset(appConstant.mCategory.where((eachCart){    /// here adding images from add expanse page.
+                                                    return eachCart.categoryId == expanse.allExpanses[childIndex].expanseCategoryId;
+                                                  }).toList()[0].categoryIcons!,),
                                                   decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(11),
-                                                       // color: Colors.primaries[Random.nextInt(Colors.primaries.length-1)].shade100,
-                                                    color:  Colors.lightBlue
+                                                    color: Colors.primaries[Random().nextInt(Colors.primaries.length-1)].shade100
                                                   ),
 
                                                 ),
-                                                title: Text(expanse.expanseTitle,
+                                                title: Text(expanse.allExpanses[childIndex].expanseTitle,
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.bold)),
-                                                subtitle: Text(expanse.expanseDescription,
+                                                subtitle: Text(expanse.allExpanses[childIndex].expanseDescription,
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.grey)),
                                                 trailing: Text(
-                                                  "\$${expanse.expanseAmount}",
+                                                  "\$${expanse.allExpanses[childIndex].expanseAmount}",
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
-                                                    color: expanse.expanseBalance! < 0
+                                                    color: expanse.allExpanses[childIndex].expanseBalance! < 0
                                                         ? Colors.red
                                                         : Colors.green,
                                                   ),

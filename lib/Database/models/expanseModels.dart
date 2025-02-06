@@ -16,7 +16,7 @@ class expanseDataModel{
   double? expanseAmount;
   double? expanseBalance;
   String expanseType;
-  int? expanseCategoryId;
+  int expanseCategoryId;
   String? created_at;
 
   expanseDataModel({

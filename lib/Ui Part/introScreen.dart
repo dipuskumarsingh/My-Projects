@@ -4,7 +4,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dashboard.dart';
-import 'loginPage.dart';
 class introScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {

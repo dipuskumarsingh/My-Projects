@@ -9,6 +9,7 @@ import 'package:monety_ui/Database/models/expanseModels.dart';
 import 'package:monety_ui/Domain/appConstant.dart';
 import 'package:monety_ui/Ui%20Part/bloc/Expanse_events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Database/models/filteringModel.dart';
 import '../Domain/uiHelper.dart';
 import 'bloc/Expanse_bloc.dart';
 
@@ -32,6 +33,23 @@ class _AddExpansePageState extends State<AddExpansePage> {
   int selectedIndex = -1;  /// its make global variable for category items to selected the icons.
   DateTime? selectedDateTime;
   DateFormat Df = DateFormat.MMMEd();   ///yMMMEd();
+
+
+/// filtering part logic;
+  void filterExpanseDateWise({required List<filteringModelExpanse> allExpanses}){
+
+    /// very important for the filtering (clear is used for clear data which was all ready add)
+    // filteringModelExpanse.clear();
+
+    List<String> uniqueDates = [];
+    for(filteringModelExpanse eachExp in allExpanses){
+      // String eachDate =Df.format(DateTime.fromMillisecondsSinceEpoch(eachExp.created_at)))
+    }
+
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

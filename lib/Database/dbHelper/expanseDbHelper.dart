@@ -57,7 +57,7 @@ class DbHelper{
 
       /// now creating table
       /// this table is created for the users
-      db.execute("create table $TABLE_NAME( $COLUMN_USER_ID integer primary key autoincrement, $COLUMN_USER_NAME text not null, $COLUMN_USER_EMAIL_ID text not null, $COLUMN_USER_MOBILE_NUMBER text not null, $COLUMN_USER_PASSWORD text not null, $COLUMN_USER_CREATED_DATE text not null )");
+      db.execute("create table $TABLE_NAME( $COLUMN_USER_ID integer primary key autoincrement, $COLUMN_USER_NAME text not null, $COLUMN_USER_EMAIL_ID text not null, $COLUMN_USER_MOBILE_NUMBER text, $COLUMN_USER_PASSWORD text not null, $COLUMN_USER_CREATED_DATE text not null )");
 
       /// This table is used for the Expense data
       db.execute("create table $TABLE_EXPANSE_NAME( $COLUMN_EXPANSE_ID integer primary key autoincrement, $COLUMN_EXPANSE_USER_ID integer not null, $COLUMN_EXPANSE_TITLE text not null, $COLUMN_EXPANSE_DESCRIPTION text not null, $COLUMN_EXPANSE_AMOUNT real not null, $COLUMN_EXPANSE_BALANCE real not null, $COLUMN_EXPANSE_TYPE text not null, $COLUMN_EXPANSE_CATEGORY_ID integer not null, $COLUMN_EXPANSE_TIME text not null ) ");
@@ -130,7 +130,7 @@ Future<bool> addExpanse({required expanseDataModel Ex})async{
 
  Future<List<expanseDataModel>>fecthExpanseData()async{
     var db = await getDb();
-  List<Map<String, dynamic>> mData = await  db.query(TABLE_EXPANSE_NAME,);
+  List<Map<String, dynamic>> mData = await  db.query(TABLE_EXPANSE_NAME,orderBy: "$COLUMN_EXPANSE_TIME DESC"); /// (DESC) is used for add current date data in date base.
   List<expanseDataModel> mExpanse = [];
   for(Map<String, dynamic> eachExpanse in mData){
    mExpanse.add(expanseDataModel.fromMap(eachExpanse));

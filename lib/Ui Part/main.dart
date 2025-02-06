@@ -37,7 +37,7 @@ class _SplaceScreenState extends State<SplaceScreen> {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>introScreen()));
       var prefs = await SharedPreferences.getInstance();    /// here we maintain the session [if] user log in the app dricatily got to the Dashboard screen [else] he go to the login screen
      int uid = prefs.getInt("UID") ?? 0;
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>introScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>introScreen()));
      Widget navigateTo = loginpage();
      if(uid > 0){
        navigateTo = Dashboard();
